@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ignore pycharm stuff
+.idea/
+
+#ignore API KEY
+config.py
