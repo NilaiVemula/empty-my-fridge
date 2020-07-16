@@ -31,4 +31,4 @@ python main.py
 
 ## Examples
 
-TODO: add screenshots
+TODO: add screenshots using https://github.com/mixn/carbon-now-cli
