@@ -16,14 +16,16 @@ This file is not included in the git repository to protect my key, but it is ess
  `main.py` script, I import the API key as `config.API_KEY`.
  
 ## Requirements
-This project requires Python 3.
+This project requires Python 3 using the `requests` library to access the API and the `rich` library to format the
+ output for the command line.
 
 ## Getting Started
-The easiest way to run this script is to clone the repository and then run the `main.py` script using the command
- line after making a `config.py` file as described above.
+The easiest way to run this script is to clone the repository, install the required packages, and then run the `main.py
+` script using the command line after making a `config.py` file as described above.
  
 ```bash
 git clone https://github.com/NilaiVemula/empty-my-fridge.git
+pip3 install -r requirements.txt
 python main.py
 ```
 

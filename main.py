@@ -5,6 +5,8 @@
 """
 
 import requests
+from rich import print
+from rich.console import Console
 
 import config
 
@@ -33,30 +35,69 @@ def get_missing_ingredients(available_ingredients, amount_recipes):
         'ignorePantry': True
     }
 
-    r = requests.get('https://api.spoonacular.com/recipes/findByIngredients', params=parameters)
-    print(r.url)
-    print(r.json())
+    r = requests.get('https://api.spoonacular.com/recipes/findByIngredients/', params=parameters)
+    data = r.json()
+    recipes = []
+    missing_ingredients = []
+    links = []
+    for recipe in data:
+
+        # get recipe information
+        param = {
+            'apiKey': config.API_KEY,
+            'includeNutrition': False
+        }
+
+        a = requests.get('https://api.spoonacular.com/recipes/' + str(recipe['id']) + '/information', params=param)
+        d = a.json()
+
+        recipes.append(recipe['title'])
+        list_of_missing = recipe['missedIngredients']
+        missing_string = ''
+        for item in list_of_missing:
+            missing_string += item['originalString']
+            missing_string += ', '
+        missing_ingredients.append(missing_string)
+        links.append(d['sourceUrl'])
+
+    return recipes, missing_ingredients, links
     # TODO: add text formatting of json output and make it pretty with https://github.com/willmcgugan/rich
+    # return tuple of lists with recipe name, missing ingredients, etc
 
 
 def main():
-    ingredients = input("Enter the ingredients you have (each separated by a space): ")
-    amount_recipes = int(input("How many recipes do you want to see? "))
+    # initialize the rich environment for command line formatting
+    console = Console()
+
+    # get user inputs
+    ingredients = console.input("Enter the ingredients you have (each separated by a comma and a space): ")
+    amount_recipes = int(console.input("How many recipes do you want to see? "))
     while amount_recipes < 1:
-        amount_recipes = input("Please enter 1 or higher: ")
+        amount_recipes = int(console.input("Please enter 1 or higher: "))
 
-    temp = ingredients.split()  # separate the individual ingredients into a list
+    # call method to get results
+    recipes, missing, links = get_missing_ingredients(ingredients, amount_recipes)
+    print(recipes)
+    print(missing)
 
-    # creating a string of ingredients separated by a comma
-    ingredients = ""
-    for item in temp:
-        ingredients = ingredients + item
-        ingredients = ingredients + ", "
+    # format output
+    # unpack results and format into table
+    from rich.table import Table
 
-    if len(ingredients) != 0:
-        ingredients = ingredients[:-2]  # remove the last space and comma
+    # initialize table
+    table = Table(title='Recipes you can make with ' + ingredients)
+    table.add_column("Recipe Name", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Missing Ingredients", style="magenta")
+    table.add_column("Recipe Link", justify="right", style="green")
 
-    get_missing_ingredients(ingredients, amount_recipes)
+    # load data
+    for recipe, missing_ingredients, link in zip(recipes, missing, links):
+        table.add_row(recipe, missing_ingredients, link)
+    # todo make full links and ingrediant list show up
+
+    console.print(table)
+    print("Visit my [link=https://www.willmcgugan.com]blog[/link]!")
+    # todo figure out links
 
 
 if __name__ == "__main__":
