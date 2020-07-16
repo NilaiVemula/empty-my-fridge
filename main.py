@@ -36,6 +36,7 @@ def get_missing_ingredients(available_ingredients, amount_recipes):
     r = requests.get('https://api.spoonacular.com/recipes/findByIngredients', params=parameters)
     print(r.url)
     print(r.json())
+    # TODO: add text formatting of json output and make it pretty with https://github.com/willmcgugan/rich
 
 
 def main():
