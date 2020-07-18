@@ -5,7 +5,6 @@
 """
 
 import requests
-from rich import print
 from rich.console import Console
 
 import config
@@ -53,16 +52,13 @@ def get_missing_ingredients(available_ingredients, amount_recipes):
 
         recipes.append(recipe['title'])
         list_of_missing = recipe['missedIngredients']
-        missing_string = ''
+        missing = []
         for item in list_of_missing:
-            missing_string += item['originalString']
-            missing_string += ', '
-        missing_ingredients.append(missing_string)
+            missing.append(item['name'])
+        missing_ingredients.append(', '.join(map(str, missing)))
         links.append(d['sourceUrl'])
 
     return recipes, missing_ingredients, links
-    # TODO: add text formatting of json output and make it pretty with https://github.com/willmcgugan/rich
-    # return tuple of lists with recipe name, missing ingredients, etc
 
 
 def main():
@@ -77,8 +73,6 @@ def main():
 
     # call method to get results
     recipes, missing, links = get_missing_ingredients(ingredients, amount_recipes)
-    print(recipes)
-    print(missing)
 
     # format output
     # unpack results and format into table
@@ -86,18 +80,16 @@ def main():
 
     # initialize table
     table = Table(title='Recipes you can make with ' + ingredients)
-    table.add_column("Recipe Name", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Recipe Name", style="cyan")
     table.add_column("Missing Ingredients", style="magenta")
-    table.add_column("Recipe Link", justify="right", style="green")
+    table.add_column("Recipe Link", style="green")
 
     # load data
     for recipe, missing_ingredients, link in zip(recipes, missing, links):
         table.add_row(recipe, missing_ingredients, link)
-    # todo make full links and ingrediant list show up
+    # FIXME: make full links and ingredient list show up
 
     console.print(table)
-    print("Visit my [link=https://www.willmcgugan.com]blog[/link]!")
-    # todo figure out links
 
 
 if __name__ == "__main__":
