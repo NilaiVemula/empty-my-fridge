@@ -87,7 +87,7 @@ def main():
     # load data
     for recipe, missing_ingredients, link in zip(recipes, missing, links):
         table.add_row(recipe, missing_ingredients, link)
-    # FIXME: make full links and ingredient list show up
+    # FIXME: make full links and ingredient list show up in smaller windows
 
     console.print(table)
 

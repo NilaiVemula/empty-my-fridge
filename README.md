@@ -8,8 +8,9 @@ Given a list of ingredients, Empty My Fridge will provide a list of recipes that
 In order to use the Spoonacular API, you must create an account and request an API key. For this project, my API key
  is kept in a file titled `config.py`. This file contains only one line:
  
- ```python
+```python
 API_KEY = '[insert key here]'
+
 ```
 
 This file is not included in the git repository to protect my key, but it is essential for running the script. In my
@@ -32,3 +33,4 @@ python main.py
 ## Examples
 
 TODO: add screenshots using https://github.com/mixn/carbon-now-cli
+
